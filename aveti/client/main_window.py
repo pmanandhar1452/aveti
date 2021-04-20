@@ -13,18 +13,29 @@ __email__      = "prakashm@alum.mit.edu"
 __status__     = "Production"
 
 import sys
-from PySide6 import QtWidgets
+from PySide6 import QtWidgets, QtGui
 from qt_material import apply_stylesheet
 
 class MainWindow(QtWidgets.QWidget):
+
+    def _addTreeChildren(self, pNode):
+        pNode.addChild(QtWidgets.QTreeWidgetItem(["Light"]))
+        pNode.addChild(QtWidgets.QTreeWidgetItem(["Temperature"]))
+        pNode.addChild(QtWidgets.QTreeWidgetItem(["Humidity"]))
+        pNode.addChild(QtWidgets.QTreeWidgetItem(["Moisture"]))
+
     def __init__(self):
         super(MainWindow, self).__init__()
         self.main_layout = QtWidgets.QVBoxLayout()
         self.button = QtWidgets.QPushButton("Test")
         self.main_layout.addWidget(self.button)
-
+        
         l1 = QtWidgets.QTreeWidgetItem([ "Living Room Spider Plant"])
         l2 = QtWidgets.QTreeWidgetItem([ "Kitchen Orchid"])
+    
+        self._addTreeChildren(l1)
+        self._addTreeChildren(l2)
+        
         tw = QtWidgets.QTreeWidget(self)
         tw.setColumnCount(1)
         tw.setHeaderLabels(["My Plants"])
