@@ -3,6 +3,9 @@ MODULE := aveti
 run-client:
 	@python3 -m $(MODULE).client.main_window
 
+run-server:
+	@python3 -m $(MODULE).server
+
 grpc-gen:
 	@python3 -m grpc_tools.protoc \
 			-I $(MODULE)/interface \
