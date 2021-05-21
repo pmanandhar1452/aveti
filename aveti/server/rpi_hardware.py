@@ -49,4 +49,4 @@ class RPiHardware(AbstractRPiHardware):
             self.bz.off()
         else:
             self.bz.on()
-        self.bz = not self.bz
+        self.bzon = not self.bzon
