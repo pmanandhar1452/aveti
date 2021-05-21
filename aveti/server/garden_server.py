@@ -9,7 +9,7 @@ class Garden(garden_pb2_grpc.GardenServicer):
         pass
 
     def HeartBeat(self, request, context):
-        timestamp = int(time.time()*1000)
+        timestamp_ms = int(time.time()*1000)
         cpu_temp = HardwareFactory.getRPi() \
             .get_cpu_temperature()
 
@@ -17,5 +17,5 @@ class Garden(garden_pb2_grpc.GardenServicer):
 
         return garden_pb2.HeartBeatReply(
             request_timestamp_ms = request.request_timestamp_ms,
-            timestamp_ms = timestamp,
+            timestamp_ms = timestamp_ms,
             cpu_temperature_degC = cpu_temp)

@@ -1,3 +1,6 @@
 PySide6
 qt-material
 configparser
+grpcio
+grpcio-tools
+Adafruit_DHT

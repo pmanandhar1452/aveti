@@ -1,7 +1,7 @@
 syntax = "proto3";
 package garden;
 
-message HeartBeatRequest {
+message Request {
     uint64 request_timestamp_ms = 1;
 }
 
@@ -10,6 +10,20 @@ message HeartBeatReply {
     float cpu_temperature_degC = 6;
 }
 
+enum CommandReport {
+    EXECUTED = 0;
+    INVALID_STATE = 1;
+    EXECUTION_ERROR = 2;
+}
+
+message CommandResponse {
+    uint64 timestamp = 1;
+    uint64 request_timestamp = 2;
+    CommandReport status = 3;
+}
+
 service Garden {
-    rpc HeartBeat (HeartBeatRequest) returns (HeartBeatReply);
+    rpc HeartBeat (Request) returns (HeartBeatReply);
+    rpc WaterPlant(Request) returns (CommandResponse);
+    
 }   
