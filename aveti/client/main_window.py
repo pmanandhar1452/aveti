@@ -55,6 +55,29 @@ class RPiHeartBeat(QtCore.QThread):
 
         self.done.emit(response)
 
+class WaterPlantThread(QtCore.QThread):
+    done = Signal(object)
+    def __init__(self):
+        QtCore.QThread.__init__(self)
+        
+    def run(self):
+        global RPI_IP_ADDRESS_PORT, GRPC_CALL_TIMEOUT
+        response = None
+        try:
+            timestamp = int(time.time()*1000)
+            with grpc.insecure_channel(RPI_IP_ADDRESS_PORT) as channel:
+                stub = garden_pb2_grpc.GardenStub(channel)
+                response = stub.WaterPlant (
+                    garden_pb2.Request(request_timestamp_ms = timestamp),
+                    timeout = GRPC_CALL_TIMEOUT )
+                print(response)
+        
+        except Exception as e:
+            info = f"Error connecting to RPi Server at: {RPI_IP_ADDRESS_PORT}: + {str(e)}"
+            print(info)
+
+        self.done.emit(response)
+
 class MainWindow(QtWidgets.QWidget):
 
     def _addTreeChildren(self, pNode):
@@ -64,10 +87,12 @@ class MainWindow(QtWidgets.QWidget):
         pNode.addChild(QtWidgets.QTreeWidgetItem(["Moisture"]))
 
     def __init__(self):
+        self.threads = []
         super(MainWindow, self).__init__()
         self.main_layout = QtWidgets.QVBoxLayout()
         self.button = QtWidgets.QPushButton("Test")
         self.main_layout.addWidget(self.button)
+        self.button.clicked.connect(self.onTestClick)
         
         l1 = QtWidgets.QTreeWidgetItem([ "Living Room Spider Plant"])
         l2 = QtWidgets.QTreeWidgetItem([ "Kitchen Orchid"])
@@ -89,9 +114,13 @@ class MainWindow(QtWidgets.QWidget):
         self.heartbeat_timer.start(HEARTBEAT_TIMEOUT)
 
     def onHeartBeat(self):
-        self.threads = []
         client_thread = RPiHeartBeat()
         #client_thread.done.connect(self.on_heartbeat_received)
+        self.threads.append(client_thread)
+        client_thread.start()
+
+    def onTestClick(self):
+        client_thread = WaterPlantThread()
         self.threads.append(client_thread)
         client_thread.start()
         
