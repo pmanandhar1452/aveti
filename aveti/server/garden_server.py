@@ -9,12 +9,10 @@ class Garden(garden_pb2_grpc.GardenServicer):
         pass
 
     def HeartBeat(self, request, context):
-        timestamp_ms = int(time.time()*1000)
         cpu_temp = HardwareFactory.getRPi() \
             .get_cpu_temperature()
-
-        rig_hardware = HardwareFactory.getRig()
-
+        timestamp_ms = int(time.time()*1000)
+        
         return garden_pb2.HeartBeatReply(
             request_timestamp_ms = request.request_timestamp_ms,
             timestamp_ms = timestamp_ms,

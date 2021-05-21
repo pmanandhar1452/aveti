@@ -3,4 +3,4 @@ qt-material
 configparser
 grpcio
 grpcio-tools
-Adafruit_DHT
+adafruit-circuitpython-dht

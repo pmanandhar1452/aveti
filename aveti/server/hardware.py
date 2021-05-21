@@ -26,7 +26,7 @@ class HardwareFactory:
     def getRPi(cls):
         if cls.rpi is None:
             if config.getboolean('Operating System', 'RunningInRPi'):
-                cls.rpi = rpi_hardware.MockRPiHardware()
-            else:
                 cls.rpi = rpi_hardware.RPiHardware()
+            else:
+                cls.rpi = rpi_hardware.MockRPiHardware()
         return cls.rpi

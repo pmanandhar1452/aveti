@@ -7,6 +7,7 @@ message Request {
 
 message HeartBeatReply {
     uint64 timestamp_ms = 1;
+    uint64 request_timestamp_ms = 2;
     float cpu_temperature_degC = 6;
 }
 
@@ -17,13 +18,13 @@ enum CommandReport {
 }
 
 message CommandResponse {
-    uint64 timestamp = 1;
-    uint64 request_timestamp = 2;
+    uint64 timestamp_ms = 1;
+    uint64 request_timestamp_ms = 2;
     CommandReport status = 3;
 }
 
 service Garden {
     rpc HeartBeat (Request) returns (HeartBeatReply);
     rpc WaterPlant(Request) returns (CommandResponse);
-    
+
 }   

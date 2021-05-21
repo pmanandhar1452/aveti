@@ -12,9 +12,48 @@ __maintainer__ = "Prakash Manandhar"
 __email__      = "prakashm@alum.mit.edu"
 __status__     = "Production"
 
-import sys
-from PySide6 import QtWidgets, QtGui
+import sys, time, grpc, configparser
+from datetime import datetime, timedelta
+from PySide6 import QtCore, QtWidgets, QtGui
 from qt_material import apply_stylesheet
+from PySide6.QtCore import QTimer, Signal
+from ..generated import garden_pb2_grpc, garden_pb2
+
+config = configparser.ConfigParser()
+config.read('client_config.ini')
+
+RPI_IP_ADDRESS_PORT = \
+    f"{config.get('Network', 'MissionControlRPiIPAddress')}:" \
+    f"{config.get('Network', 'GRPCPort')}"
+
+HEARTBEAT_TIMEOUT   = \
+    config.getint('Network', 'HeartbeatTimeout')
+GRPC_CALL_TIMEOUT   = \
+    config.getint('Network', 'GRPCTimeout')
+
+class RPiHeartBeat(QtCore.QThread):
+    done = Signal(object)
+    def __init__(self):
+        QtCore.QThread.__init__(self)
+        
+    def run(self):
+        global RPI_IP_ADDRESS_PORT, GRPC_CALL_TIMEOUT
+        response = None
+        try:
+            timestamp = int(time.time()*1000)
+            with grpc.insecure_channel(RPI_IP_ADDRESS_PORT) as channel:
+                stub = garden_pb2_grpc.GardenStub(channel)
+                response = stub.HeartBeat (
+                    garden_pb2.Request(request_timestamp_ms = timestamp),
+                    timeout = GRPC_CALL_TIMEOUT )
+                print("Server HeartBeat received at: " + str(datetime.now()))
+                print(response)
+        
+        except Exception as e:
+            info = f"Error connecting to RPi Server at: {RPI_IP_ADDRESS_PORT}: + {str(e)}"
+            print(info)
+
+        self.done.emit(response)
 
 class MainWindow(QtWidgets.QWidget):
 
@@ -43,6 +82,18 @@ class MainWindow(QtWidgets.QWidget):
         tw.addTopLevelItem(l2)
         self.main_layout.addWidget(tw)
         self.setLayout(self.main_layout)
+
+        self.heartbeat_timer=QTimer()
+        self.heartbeat_timer.timeout.connect(self.onHeartBeat)
+        global HEARTBEAT_TIMEOUT
+        self.heartbeat_timer.start(HEARTBEAT_TIMEOUT)
+
+    def onHeartBeat(self):
+        self.threads = []
+        client_thread = RPiHeartBeat()
+        #client_thread.done.connect(self.on_heartbeat_received)
+        self.threads.append(client_thread)
+        client_thread.start()
         
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

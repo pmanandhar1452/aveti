@@ -16,8 +16,13 @@ class GardenStub(object):
         """
         self.HeartBeat = channel.unary_unary(
                 '/garden.Garden/HeartBeat',
-                request_serializer=garden__pb2.HeartBeatRequest.SerializeToString,
+                request_serializer=garden__pb2.Request.SerializeToString,
                 response_deserializer=garden__pb2.HeartBeatReply.FromString,
+                )
+        self.WaterPlant = channel.unary_unary(
+                '/garden.Garden/WaterPlant',
+                request_serializer=garden__pb2.Request.SerializeToString,
+                response_deserializer=garden__pb2.CommandResponse.FromString,
                 )
 
 
@@ -30,13 +35,24 @@ class GardenServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def WaterPlant(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_GardenServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'HeartBeat': grpc.unary_unary_rpc_method_handler(
                     servicer.HeartBeat,
-                    request_deserializer=garden__pb2.HeartBeatRequest.FromString,
+                    request_deserializer=garden__pb2.Request.FromString,
                     response_serializer=garden__pb2.HeartBeatReply.SerializeToString,
+            ),
+            'WaterPlant': grpc.unary_unary_rpc_method_handler(
+                    servicer.WaterPlant,
+                    request_deserializer=garden__pb2.Request.FromString,
+                    response_serializer=garden__pb2.CommandResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -60,7 +76,24 @@ class Garden(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/garden.Garden/HeartBeat',
-            garden__pb2.HeartBeatRequest.SerializeToString,
+            garden__pb2.Request.SerializeToString,
             garden__pb2.HeartBeatReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def WaterPlant(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/garden.Garden/WaterPlant',
+            garden__pb2.Request.SerializeToString,
+            garden__pb2.CommandResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
