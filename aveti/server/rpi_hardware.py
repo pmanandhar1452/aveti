@@ -40,7 +40,7 @@ class AbstractRPiHardware(ABC):
                 } 
         return sensor_readings
 
-    def water_plant(self):
+    def water_plant(self, plant_id):
         pass
 
 class MockRPiHardware(AbstractRPiHardware):
@@ -99,5 +99,5 @@ class RPiHardware(AbstractRPiHardware):
     def get_cpu_temperature(self):
         return CPUTemperature().temperature
 
-    def water_plant(self):
+    def water_plant(self, plant_id):
         pass
