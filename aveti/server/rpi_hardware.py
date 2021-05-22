@@ -46,39 +46,39 @@ class AbstractRPiHardware(ABC):
 class MockRPiHardware(AbstractRPiHardware):
     pass
 
+class TempRHThread(threading.Thread):
+
+    def __init__(self, gpio_pin):
+        threading.Thread.__init__(self)
+        self.stopped = True
+        self.sensor_readings = {
+                "timestamp_s": 0.0,
+                "temp_degC": 0.0,
+                "rh_percent": 0.0,
+            } 
+        self.sensor = Adafruit_DHT.DHT22
+        self.tS_s = config.getfloat('Control', 'tS_s')
+        self.gpio_pin = gpio_pin
+
+    def run(self):
+        self.stopped = False
+        while not self.stopped:
+            loop_start = time.time()
+            humidity, temperature = Adafruit_DHT.read_retry(
+                self.sensor, self.gpio_pin)
+            timestamp = time.time()
+            self.sensor_readings["timestamp_s"] = timestamp
+            self.sensor_readings["temp_degC"] = temperature
+            self.sensor_readings["rh_percent"] =  humidity
+            loop_end = time.time()
+            delta_time = loop_end - loop_start
+            if (delta_time < self.tS_s):
+                time.sleep(self.tS_s - delta_time)
+            
+    def stop(self):
+        self.stopped = True
+
 class RPiHardware(AbstractRPiHardware):
-
-    class TempRHThread(threading.Thread):
-
-        def __init__(self, gpio_pin):
-            threading.Thread.__init__(self)
-            self.stopped = True
-            self.sensor_readings = {
-                    "timestamp_s": 0.0,
-                    "temp_degC": 0.0,
-                    "rh_percent": 0.0,
-                } 
-            self.sensor = Adafruit_DHT.DHT22
-            self.tS_s = config.getfloat('Control', 'tS_s')
-            self.gpio_pin = gpio_pin
-
-        def run(self):
-            self.stopped = False
-            while not self.stopped:
-                loop_start = time.time()
-                humidity, temperature = Adafruit_DHT.read_retry(
-                    self.sensor, self.gpio_pin)
-                timestamp = time.time()
-                self.sensor_readings["timestamp_s"] = timestamp
-                self.sensor_readings["temp_degC"] = temperature
-                self.sensor_readings["rh_percent"] =  humidity
-                loop_end = time.time()
-                delta_time = loop_end - loop_start
-                if (delta_time < self.tS_s):
-                    time.sleep(self.tS_s - delta_time)
-                
-        def stop(self):
-            self.stopped = True
 
     def __init__(self):
         self._connect_plants()
