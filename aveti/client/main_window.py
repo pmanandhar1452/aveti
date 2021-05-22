@@ -101,8 +101,9 @@ class GetDataThread(QtCore.QThread):
                         request_timestamp_ms = timestamp,
                         plant_id = self.plant_id),
                     timeout = GRPC_CALL_TIMEOUT )
+                print("Get Data Response")
                 print(response)
-        
+                
         except Exception as e:
             info = f"Error connecting to RPi Server at: {RPI_IP_ADDRESS_PORT}: + {str(e)}"
             print(info)
@@ -144,6 +145,7 @@ class MainWindow(QtWidgets.QWidget):
         self.plot.showGrid(x = True, y = True, alpha = 1.0)
         self.plot.getAxis('bottom').setLabel(f't (s)')
         self.plot.getAxis('left').setLabel(f'T (deg C)')
+        self.start_time = time.time()
         self.sensor_timestamp_s = []
         self.temp_degC = []
         self.scatter = pg.ScatterPlotItem(
@@ -170,7 +172,8 @@ class MainWindow(QtWidgets.QWidget):
     @QtCore.Slot(object)
     def on_data_received(self, response):
         if (response != None):
-            self.sensor_timestamp_s.append(response.sensor_timestamp_s)
+            self.sensor_timestamp_s.append(
+                response.sensor_timestamp_s - self.start_time)
             self.temp_degC.append(response.temp_degC)
             self.scatter.setData(self.sensor_timestamp_s, self.temp_degC)
 
