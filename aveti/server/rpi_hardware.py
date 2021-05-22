@@ -93,7 +93,8 @@ class RPiHardware(AbstractRPiHardware):
             self.water_relays[i].off()
 
     def get_temp_rh(self, plant_id):
-        return self.temp_rh_threads[plant_id].sensor_readings.copy()
+        print("Here")
+        return self.temp_rh_threads[plant_id].sensor_readings
         
     def get_cpu_temperature(self):
         return CPUTemperature().temperature
