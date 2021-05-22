@@ -123,7 +123,7 @@ class MainWindow(QtWidgets.QWidget):
         self.threads = []
         super(MainWindow, self).__init__()
         self.main_layout = QtWidgets.QVBoxLayout()
-        self.button = QtWidgets.QPushButton("Test")
+        self.button = QtWidgets.QPushButton("Water Plant")
         self.main_layout.addWidget(self.button)
         self.button.clicked.connect(self.onTestClick)
         
