@@ -17,7 +17,9 @@ from datetime import datetime, timedelta
 from PySide6 import QtCore, QtWidgets, QtGui
 from qt_material import apply_stylesheet
 from PySide6.QtCore import QTimer, Signal
+import pyqtgraph as pg
 from ..generated import garden_pb2_grpc, garden_pb2
+
 
 config = configparser.ConfigParser()
 config.read('client_config.ini')
@@ -57,8 +59,9 @@ class RPiHeartBeat(QtCore.QThread):
 
 class WaterPlantThread(QtCore.QThread):
     done = Signal(object)
-    def __init__(self):
+    def __init__(self, plant_id):
         QtCore.QThread.__init__(self)
+        self.plant_id = plant_id
         
     def run(self):
         global RPI_IP_ADDRESS_PORT, GRPC_CALL_TIMEOUT
@@ -68,7 +71,9 @@ class WaterPlantThread(QtCore.QThread):
             with grpc.insecure_channel(RPI_IP_ADDRESS_PORT) as channel:
                 stub = garden_pb2_grpc.GardenStub(channel)
                 response = stub.WaterPlant (
-                    garden_pb2.Request(request_timestamp_ms = timestamp),
+                    garden_pb2.Request(
+                        request_timestamp_ms = timestamp,
+                        plant_id = self.plant_id),
                     timeout = GRPC_CALL_TIMEOUT )
                 print(response)
         
@@ -77,6 +82,33 @@ class WaterPlantThread(QtCore.QThread):
             print(info)
 
         self.done.emit(response)
+
+class GetDataThread(QtCore.QThread):
+    done = Signal(object)
+    def __init__(self, plant_id):
+        QtCore.QThread.__init__(self)
+        self.plant_id = plant_id
+        
+    def run(self):
+        global RPI_IP_ADDRESS_PORT, GRPC_CALL_TIMEOUT
+        response = None
+        try:
+            timestamp = int(time.time()*1000)
+            with grpc.insecure_channel(RPI_IP_ADDRESS_PORT) as channel:
+                stub = garden_pb2_grpc.GardenStub(channel)
+                response = stub.GetData (
+                    garden_pb2.Request(
+                        request_timestamp_ms = timestamp,
+                        plant_id = self.plant_id),
+                    timeout = GRPC_CALL_TIMEOUT )
+                print(response)
+        
+        except Exception as e:
+            info = f"Error connecting to RPi Server at: {RPI_IP_ADDRESS_PORT}: + {str(e)}"
+            print(info)
+
+        self.done.emit(response)
+
 
 class MainWindow(QtWidgets.QWidget):
 
@@ -108,6 +140,17 @@ class MainWindow(QtWidgets.QWidget):
         self.main_layout.addWidget(tw)
         self.setLayout(self.main_layout)
 
+        self.plot = pg.PlotWidget()
+        self.plot.showGrid(x = True, y = True, alpha = 1.0)
+        self.plot.getAxis('bottom').setLabel(f't (s)')
+        self.plot.getAxis('left').setLabel(f'T (deg C)')
+        self.sensor_timestamp_s = []
+        self.temp_degC = []
+        self.scatter = pg.ScatterPlotItem(
+            pen=pg.mkPen(width=7, color='r'), symbol='o', size=3)
+        self.plot.addItem(self.scatter)
+        self.main_layout.addWidget(self.plot)
+
         self.heartbeat_timer=QTimer()
         self.heartbeat_timer.timeout.connect(self.onHeartBeat)
         global HEARTBEAT_TIMEOUT
@@ -118,6 +161,18 @@ class MainWindow(QtWidgets.QWidget):
         #client_thread.done.connect(self.on_heartbeat_received)
         self.threads.append(client_thread)
         client_thread.start()
+
+        data_thread = GetDataThread(0)
+        data_thread.done.connect(self.on_data_received)
+        self.threads.append(data_thread)
+        data_thread.start()
+
+    @QtCore.Slot(object)
+    def on_data_received(self, response):
+        if (response != None):
+            self.sensor_timestamp_s.append[response.sensor_timestamp_s]
+            self.temp_degC.append[response.temp_degC]
+            self.scatter.setData(sensor_timestamp_s, temp_degC)
 
     def onTestClick(self):
         client_thread = WaterPlantThread()

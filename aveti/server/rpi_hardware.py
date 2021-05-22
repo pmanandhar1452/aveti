@@ -33,7 +33,12 @@ class AbstractRPiHardware(ABC):
         return self.plant_names
 
     def get_temp_rh(self, plant_id):
-        pass
+        sensor_readings = {
+                    "timestamp_s": time.time(),
+                    "temp_degC": 0.0,
+                    "rh_percent": 0.0,
+                } 
+        return sensor_readings
 
     def water_plant(self):
         pass

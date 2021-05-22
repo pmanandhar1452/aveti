@@ -20,8 +20,18 @@ class Garden(garden_pb2_grpc.GardenServicer):
 
     def WaterPlant(self, request, context):
         timestamp_ms = int(time.time()*1000)
-        HardwareFactory.getRPi().water_plant()
+        HardwareFactory.getRPi().water_plant(request.plant_id)
         return garden_pb2.CommandResponse(
             request_timestamp_ms = request.request_timestamp_ms,
             timestamp_ms = timestamp_ms,
             status = garden_pb2.EXECUTED)
+
+    def GetData(self, request, context):
+        timestamp_ms = int(time.time()*1000)
+        data = HardwareFactory.getRPi().get_temp_rh(request.plant_id)
+        return garden_pb2.PlantDataReply(
+            request_timestamp_ms = request.request_timestamp_ms,
+            timestamp_ms = timestamp_ms,
+            sensor_timestamp_s = data["timestamp_s"],
+            temp_degC = data["temp_degC"],
+            rh_percent = data["rh_percent"])
