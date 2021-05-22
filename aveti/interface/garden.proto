@@ -25,7 +25,7 @@ message PlantListReply {
 message PlantDataReply {
     uint64 timestamp_ms = 1;
     uint64 request_timestamp_ms = 2;
-    float sensor_timestamp_s = 3;
+    double sensor_timestamp_s = 3;
     float temp_degC = 4;
     float rh_percent = 5;
 }
