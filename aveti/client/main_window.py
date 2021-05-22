@@ -111,7 +111,7 @@ class MainWindow(QtWidgets.QWidget):
         self.main_layout = QtWidgets.QVBoxLayout()
         self.button = QtWidgets.QPushButton("Water Plant")
         self.main_layout.addWidget(self.button)
-        self.button.clicked.connect(self.onTestClick)
+        self.button.clicked.connect(self.onWaterPlantClick)
         
         l1 = QtWidgets.QTreeWidgetItem([ "Living Room Spider Plant"])
         l2 = QtWidgets.QTreeWidgetItem([ "Kitchen Orchid"])
@@ -163,7 +163,7 @@ class MainWindow(QtWidgets.QWidget):
             self.temp_degC.append(response.temp_degC)
             self.scatter.setData(self.sensor_timestamp_s, self.temp_degC)
 
-    def onTestClick(self):
+    def onWaterPlantClick(self):
         client_thread = WaterPlantThread(0)
         self.threads.append(client_thread)
         client_thread.start()
