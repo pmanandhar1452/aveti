@@ -85,6 +85,7 @@ class RPiHardware(AbstractRPiHardware):
         self.temp_rh_threads = []
         self.water_relays = []
         for i in range(len(self.plant_names)):
+            print("Here")
             rh_thread = TempRHThread(self.temp_rh_pins[i])
             self.temp_rh_threads.append(rh_thread) 
             rh_thread.start()
@@ -93,7 +94,6 @@ class RPiHardware(AbstractRPiHardware):
             self.water_relays[i].off()
 
     def get_temp_rh(self, plant_id):
-        print("Here")
         return self.temp_rh_threads[plant_id].sensor_readings
         
     def get_cpu_temperature(self):
