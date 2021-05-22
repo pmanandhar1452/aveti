@@ -5,7 +5,35 @@ message Request {
     uint64 request_timestamp_ms = 1;
 }
 
+message PlantRequest {
+    uint64 request_timestamp_ms = 1;
+    uint32 plant_id = 2;
+}
+
 message HeartBeatReply {
+    uint64 timestamp_ms = 1;
+    uint64 request_timestamp_ms = 2;
+    float cpu_temperature_degC = 6;
+}
+
+message PlantListReply {
+    uint64 timestamp_ms = 1;
+    uint64 request_timestamp_ms = 2;
+    float cpu_temperature_degC = 6;
+}
+
+message PlantDataReply {
+    uint64 timestamp_ms = 1;
+    uint64 request_timestamp_ms = 2;
+    float cpu_temperature_degC = 6;
+}
+
+message PlantHistoricalRequest {
+    uint64 request_timestamp_ms = 1;
+    uint32 plant_id = 2;
+}
+
+message HistoricalDataReply {
     uint64 timestamp_ms = 1;
     uint64 request_timestamp_ms = 2;
     float cpu_temperature_degC = 6;
@@ -25,6 +53,8 @@ message CommandResponse {
 
 service Garden {
     rpc HeartBeat (Request) returns (HeartBeatReply);
-    rpc WaterPlant(Request) returns (CommandResponse);
-
+    rpc ListPlants (Request) returns (PlantListReply);
+    rpc GetData (PlantRequest) returns (PlantDataReply);
+    rpc HistoricalData (PlantHistoricalRequest) returns (HistoricalDataReply);
+    rpc WaterPlant(PlantRequest) returns (CommandResponse);
 }   
