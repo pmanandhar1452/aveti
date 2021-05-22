@@ -33,7 +33,7 @@ HEARTBEAT_TIMEOUT   = \
 GRPC_CALL_TIMEOUT   = \
     config.getint('Network', 'GRPCTimeout')
 
-class RPiHeartBeat(QtCore.QThread):
+class BaseGrpcThread(QtCore.QThread):
     done = Signal(object)
     def __init__(self):
         QtCore.QThread.__init__(self)
@@ -45,71 +45,57 @@ class RPiHeartBeat(QtCore.QThread):
             timestamp = int(time.time()*1000)
             with grpc.insecure_channel(RPI_IP_ADDRESS_PORT) as channel:
                 stub = garden_pb2_grpc.GardenStub(channel)
-                response = stub.HeartBeat (
-                    garden_pb2.Request(request_timestamp_ms = timestamp),
-                    timeout = GRPC_CALL_TIMEOUT )
-                print("Server HeartBeat received at: " + str(datetime.now()))
-                print(response)
-        
-        except Exception as e:
-            info = f"Error connecting to RPi Server at: {RPI_IP_ADDRESS_PORT}: + {str(e)}"
-            print(info)
-
-        self.done.emit(response)
-
-class WaterPlantThread(QtCore.QThread):
-    done = Signal(object)
-    def __init__(self, plant_id):
-        QtCore.QThread.__init__(self)
-        self.plant_id = plant_id
-        
-    def run(self):
-        global RPI_IP_ADDRESS_PORT, GRPC_CALL_TIMEOUT
-        response = None
-        try:
-            timestamp = int(time.time()*1000)
-            with grpc.insecure_channel(RPI_IP_ADDRESS_PORT) as channel:
-                stub = garden_pb2_grpc.GardenStub(channel)
-                response = stub.WaterPlant (
-                    garden_pb2.PlantRequest(
-                        request_timestamp_ms = timestamp,
-                        plant_id = self.plant_id),
-                    timeout = GRPC_CALL_TIMEOUT )
-                print(response)
-        
-        except Exception as e:
-            info = f"Error connecting to RPi Server at: {RPI_IP_ADDRESS_PORT}: + {str(e)}"
-            print(info)
-
-        self.done.emit(response)
-
-class GetDataThread(QtCore.QThread):
-    done = Signal(object)
-    def __init__(self, plant_id):
-        QtCore.QThread.__init__(self)
-        self.plant_id = plant_id
-        
-    def run(self):
-        global RPI_IP_ADDRESS_PORT, GRPC_CALL_TIMEOUT
-        response = None
-        try:
-            timestamp = int(time.time()*1000)
-            with grpc.insecure_channel(RPI_IP_ADDRESS_PORT) as channel:
-                stub = garden_pb2_grpc.GardenStub(channel)
-                response = stub.GetData (
-                    garden_pb2.PlantRequest(
-                        request_timestamp_ms = timestamp,
-                        plant_id = self.plant_id),
-                    timeout = GRPC_CALL_TIMEOUT )
-                print("Get Data Response")
-                print(response)
+                response = self._get_response(stub, timestamp)
                 
         except Exception as e:
             info = f"Error connecting to RPi Server at: {RPI_IP_ADDRESS_PORT}: + {str(e)}"
             print(info)
 
         self.done.emit(response)
+    
+    def _get_response(self, stub, timestamp):
+        return None
 
+class RPiHeartBeat(BaseGrpcThread):
+    def _get_response(self, stub, timestamp):
+        response = stub.HeartBeat (
+            garden_pb2.Request(request_timestamp_ms = timestamp),
+            timeout = GRPC_CALL_TIMEOUT )
+        print("Server HeartBeat received at: " + str(datetime.now()))
+        print(response)
+
+        return response
+
+class WaterPlantThread(BaseGrpcThread):
+
+    def __init__(self, plant_id):
+        super(WaterPlantThread, self).__init__()
+        self.plant_id = plant_id
+
+    def _get_response(self, stub, timestamp):
+        response = stub.WaterPlant (
+            garden_pb2.PlantRequest(
+                request_timestamp_ms = timestamp,
+                plant_id = self.plant_id),
+            timeout = GRPC_CALL_TIMEOUT )
+        print(response)
+        return response
+
+class GetDataThread(BaseGrpcThread):
+    def __init__(self, plant_id):
+        super(GetDataThread, self).__init__()
+        self.plant_id = plant_id
+        
+    def _get_response(self, stub, timestamp):
+        response = stub.GetData (
+            garden_pb2.PlantRequest(
+                request_timestamp_ms = timestamp,
+                plant_id = self.plant_id),
+            timeout = GRPC_CALL_TIMEOUT )
+        print("Get Data Response")
+        print(response)
+
+        return response
 
 class MainWindow(QtWidgets.QWidget):
 
