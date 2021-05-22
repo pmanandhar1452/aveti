@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0cgarden.proto\x12\x06garden\"\'\n\x07Request\x12\x1c\n\x14request_timestamp_ms\x18\x01 \x01(\x04\"b\n\x0eHeartBeatReply\x12\x14\n\x0ctimestamp_ms\x18\x01 \x01(\x04\x12\x1c\n\x14request_timestamp_ms\x18\x02 \x01(\x04\x12\x1c\n\x14\x63pu_temperature_degC\x18\x06 \x01(\x02\"l\n\x0f\x43ommandResponse\x12\x14\n\x0ctimestamp_ms\x18\x01 \x01(\x04\x12\x1c\n\x14request_timestamp_ms\x18\x02 \x01(\x04\x12%\n\x06status\x18\x03 \x01(\x0e\x32\x15.garden.CommandReport*E\n\rCommandReport\x12\x0c\n\x08\x45XECUTED\x10\x00\x12\x11\n\rINVALID_STATE\x10\x01\x12\x13\n\x0f\x45XECUTION_ERROR\x10\x02\x32v\n\x06Garden\x12\x34\n\tHeartBeat\x12\x0f.garden.Request\x1a\x16.garden.HeartBeatReply\x12\x36\n\nWaterPlant\x12\x0f.garden.Request\x1a\x17.garden.CommandResponseb\x06proto3'
+  serialized_pb=b'\n\x0cgarden.proto\x12\x06garden\"\'\n\x07Request\x12\x1c\n\x14request_timestamp_ms\x18\x01 \x01(\x04\">\n\x0cPlantRequest\x12\x1c\n\x14request_timestamp_ms\x18\x01 \x01(\x04\x12\x10\n\x08plant_id\x18\x02 \x01(\r\"b\n\x0eHeartBeatReply\x12\x14\n\x0ctimestamp_ms\x18\x01 \x01(\x04\x12\x1c\n\x14request_timestamp_ms\x18\x02 \x01(\x04\x12\x1c\n\x14\x63pu_temperature_degC\x18\x06 \x01(\x02\"b\n\x0ePlantListReply\x12\x14\n\x0ctimestamp_ms\x18\x01 \x01(\x04\x12\x1c\n\x14request_timestamp_ms\x18\x02 \x01(\x04\x12\x1c\n\x14\x63pu_temperature_degC\x18\x06 \x01(\x02\"\x87\x01\n\x0ePlantDataReply\x12\x14\n\x0ctimestamp_ms\x18\x01 \x01(\x04\x12\x1c\n\x14request_timestamp_ms\x18\x02 \x01(\x04\x12\x1a\n\x12sensor_timestamp_s\x18\x03 \x01(\x02\x12\x11\n\ttemp_degC\x18\x04 \x01(\x02\x12\x12\n\nrh_percent\x18\x05 \x01(\x02\"H\n\x16PlantHistoricalRequest\x12\x1c\n\x14request_timestamp_ms\x18\x01 \x01(\x04\x12\x10\n\x08plant_id\x18\x02 \x01(\r\"g\n\x13HistoricalDataReply\x12\x14\n\x0ctimestamp_ms\x18\x01 \x01(\x04\x12\x1c\n\x14request_timestamp_ms\x18\x02 \x01(\x04\x12\x1c\n\x14\x63pu_temperature_degC\x18\x06 \x01(\x02\"l\n\x0f\x43ommandResponse\x12\x14\n\x0ctimestamp_ms\x18\x01 \x01(\x04\x12\x1c\n\x14request_timestamp_ms\x18\x02 \x01(\x04\x12%\n\x06status\x18\x03 \x01(\x0e\x32\x15.garden.CommandReport*E\n\rCommandReport\x12\x0c\n\x08\x45XECUTED\x10\x00\x12\x11\n\rINVALID_STATE\x10\x01\x12\x13\n\x0f\x45XECUTION_ERROR\x10\x02\x32\xba\x02\n\x06Garden\x12\x34\n\tHeartBeat\x12\x0f.garden.Request\x1a\x16.garden.HeartBeatReply\x12\x35\n\nListPlants\x12\x0f.garden.Request\x1a\x16.garden.PlantListReply\x12\x37\n\x07GetData\x12\x14.garden.PlantRequest\x1a\x16.garden.PlantDataReply\x12M\n\x0eHistoricalData\x12\x1e.garden.PlantHistoricalRequest\x1a\x1b.garden.HistoricalDataReply\x12;\n\nWaterPlant\x12\x14.garden.PlantRequest\x1a\x17.garden.CommandResponseb\x06proto3'
 )
 
 _COMMANDREPORT = _descriptor.EnumDescriptor(
@@ -48,8 +48,8 @@ _COMMANDREPORT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=275,
-  serialized_end=344,
+  serialized_start=756,
+  serialized_end=825,
 )
 _sym_db.RegisterEnumDescriptor(_COMMANDREPORT)
 
@@ -89,6 +89,45 @@ _REQUEST = _descriptor.Descriptor(
   ],
   serialized_start=24,
   serialized_end=63,
+)
+
+
+_PLANTREQUEST = _descriptor.Descriptor(
+  name='PlantRequest',
+  full_name='garden.PlantRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='request_timestamp_ms', full_name='garden.PlantRequest.request_timestamp_ms', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='plant_id', full_name='garden.PlantRequest.plant_id', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=65,
+  serialized_end=127,
 )
 
 
@@ -133,8 +172,199 @@ _HEARTBEATREPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=65,
-  serialized_end=163,
+  serialized_start=129,
+  serialized_end=227,
+)
+
+
+_PLANTLISTREPLY = _descriptor.Descriptor(
+  name='PlantListReply',
+  full_name='garden.PlantListReply',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='timestamp_ms', full_name='garden.PlantListReply.timestamp_ms', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='request_timestamp_ms', full_name='garden.PlantListReply.request_timestamp_ms', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='cpu_temperature_degC', full_name='garden.PlantListReply.cpu_temperature_degC', index=2,
+      number=6, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=229,
+  serialized_end=327,
+)
+
+
+_PLANTDATAREPLY = _descriptor.Descriptor(
+  name='PlantDataReply',
+  full_name='garden.PlantDataReply',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='timestamp_ms', full_name='garden.PlantDataReply.timestamp_ms', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='request_timestamp_ms', full_name='garden.PlantDataReply.request_timestamp_ms', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='sensor_timestamp_s', full_name='garden.PlantDataReply.sensor_timestamp_s', index=2,
+      number=3, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='temp_degC', full_name='garden.PlantDataReply.temp_degC', index=3,
+      number=4, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='rh_percent', full_name='garden.PlantDataReply.rh_percent', index=4,
+      number=5, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=330,
+  serialized_end=465,
+)
+
+
+_PLANTHISTORICALREQUEST = _descriptor.Descriptor(
+  name='PlantHistoricalRequest',
+  full_name='garden.PlantHistoricalRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='request_timestamp_ms', full_name='garden.PlantHistoricalRequest.request_timestamp_ms', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='plant_id', full_name='garden.PlantHistoricalRequest.plant_id', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=467,
+  serialized_end=539,
+)
+
+
+_HISTORICALDATAREPLY = _descriptor.Descriptor(
+  name='HistoricalDataReply',
+  full_name='garden.HistoricalDataReply',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='timestamp_ms', full_name='garden.HistoricalDataReply.timestamp_ms', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='request_timestamp_ms', full_name='garden.HistoricalDataReply.request_timestamp_ms', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='cpu_temperature_degC', full_name='garden.HistoricalDataReply.cpu_temperature_degC', index=2,
+      number=6, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=541,
+  serialized_end=644,
 )
 
 
@@ -179,13 +409,18 @@ _COMMANDRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=165,
-  serialized_end=273,
+  serialized_start=646,
+  serialized_end=754,
 )
 
 _COMMANDRESPONSE.fields_by_name['status'].enum_type = _COMMANDREPORT
 DESCRIPTOR.message_types_by_name['Request'] = _REQUEST
+DESCRIPTOR.message_types_by_name['PlantRequest'] = _PLANTREQUEST
 DESCRIPTOR.message_types_by_name['HeartBeatReply'] = _HEARTBEATREPLY
+DESCRIPTOR.message_types_by_name['PlantListReply'] = _PLANTLISTREPLY
+DESCRIPTOR.message_types_by_name['PlantDataReply'] = _PLANTDATAREPLY
+DESCRIPTOR.message_types_by_name['PlantHistoricalRequest'] = _PLANTHISTORICALREQUEST
+DESCRIPTOR.message_types_by_name['HistoricalDataReply'] = _HISTORICALDATAREPLY
 DESCRIPTOR.message_types_by_name['CommandResponse'] = _COMMANDRESPONSE
 DESCRIPTOR.enum_types_by_name['CommandReport'] = _COMMANDREPORT
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -197,12 +432,47 @@ Request = _reflection.GeneratedProtocolMessageType('Request', (_message.Message,
   })
 _sym_db.RegisterMessage(Request)
 
+PlantRequest = _reflection.GeneratedProtocolMessageType('PlantRequest', (_message.Message,), {
+  'DESCRIPTOR' : _PLANTREQUEST,
+  '__module__' : 'garden_pb2'
+  # @@protoc_insertion_point(class_scope:garden.PlantRequest)
+  })
+_sym_db.RegisterMessage(PlantRequest)
+
 HeartBeatReply = _reflection.GeneratedProtocolMessageType('HeartBeatReply', (_message.Message,), {
   'DESCRIPTOR' : _HEARTBEATREPLY,
   '__module__' : 'garden_pb2'
   # @@protoc_insertion_point(class_scope:garden.HeartBeatReply)
   })
 _sym_db.RegisterMessage(HeartBeatReply)
+
+PlantListReply = _reflection.GeneratedProtocolMessageType('PlantListReply', (_message.Message,), {
+  'DESCRIPTOR' : _PLANTLISTREPLY,
+  '__module__' : 'garden_pb2'
+  # @@protoc_insertion_point(class_scope:garden.PlantListReply)
+  })
+_sym_db.RegisterMessage(PlantListReply)
+
+PlantDataReply = _reflection.GeneratedProtocolMessageType('PlantDataReply', (_message.Message,), {
+  'DESCRIPTOR' : _PLANTDATAREPLY,
+  '__module__' : 'garden_pb2'
+  # @@protoc_insertion_point(class_scope:garden.PlantDataReply)
+  })
+_sym_db.RegisterMessage(PlantDataReply)
+
+PlantHistoricalRequest = _reflection.GeneratedProtocolMessageType('PlantHistoricalRequest', (_message.Message,), {
+  'DESCRIPTOR' : _PLANTHISTORICALREQUEST,
+  '__module__' : 'garden_pb2'
+  # @@protoc_insertion_point(class_scope:garden.PlantHistoricalRequest)
+  })
+_sym_db.RegisterMessage(PlantHistoricalRequest)
+
+HistoricalDataReply = _reflection.GeneratedProtocolMessageType('HistoricalDataReply', (_message.Message,), {
+  'DESCRIPTOR' : _HISTORICALDATAREPLY,
+  '__module__' : 'garden_pb2'
+  # @@protoc_insertion_point(class_scope:garden.HistoricalDataReply)
+  })
+_sym_db.RegisterMessage(HistoricalDataReply)
 
 CommandResponse = _reflection.GeneratedProtocolMessageType('CommandResponse', (_message.Message,), {
   'DESCRIPTOR' : _COMMANDRESPONSE,
@@ -220,8 +490,8 @@ _GARDEN = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=346,
-  serialized_end=464,
+  serialized_start=828,
+  serialized_end=1142,
   methods=[
   _descriptor.MethodDescriptor(
     name='HeartBeat',
@@ -234,11 +504,41 @@ _GARDEN = _descriptor.ServiceDescriptor(
     create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
-    name='WaterPlant',
-    full_name='garden.Garden.WaterPlant',
+    name='ListPlants',
+    full_name='garden.Garden.ListPlants',
     index=1,
     containing_service=None,
     input_type=_REQUEST,
+    output_type=_PLANTLISTREPLY,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetData',
+    full_name='garden.Garden.GetData',
+    index=2,
+    containing_service=None,
+    input_type=_PLANTREQUEST,
+    output_type=_PLANTDATAREPLY,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='HistoricalData',
+    full_name='garden.Garden.HistoricalData',
+    index=3,
+    containing_service=None,
+    input_type=_PLANTHISTORICALREQUEST,
+    output_type=_HISTORICALDATAREPLY,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='WaterPlant',
+    full_name='garden.Garden.WaterPlant',
+    index=4,
+    containing_service=None,
+    input_type=_PLANTREQUEST,
     output_type=_COMMANDRESPONSE,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,

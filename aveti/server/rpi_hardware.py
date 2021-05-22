@@ -5,13 +5,13 @@ Hardware Interface and Mock Layers for RPi.
 
 from abc import ABC, abstractmethod
 import configparser, threading, time
-import Adafruit_DHT
 
 config = configparser.ConfigParser(
     converters={'list': lambda x: [i.strip() for i in x.split(',')]})
 config.read('server_config.ini')
 if config.getboolean('Operating System', 'RunningInRPi'):
     from gpiozero import CPUTemperature, Buzzer
+    import Adafruit_DHT
 
 class MockRPiPin:
     pass

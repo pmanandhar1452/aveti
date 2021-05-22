@@ -71,7 +71,7 @@ class WaterPlantThread(QtCore.QThread):
             with grpc.insecure_channel(RPI_IP_ADDRESS_PORT) as channel:
                 stub = garden_pb2_grpc.GardenStub(channel)
                 response = stub.WaterPlant (
-                    garden_pb2.Request(
+                    garden_pb2.PlantRequest(
                         request_timestamp_ms = timestamp,
                         plant_id = self.plant_id),
                     timeout = GRPC_CALL_TIMEOUT )
@@ -97,7 +97,7 @@ class GetDataThread(QtCore.QThread):
             with grpc.insecure_channel(RPI_IP_ADDRESS_PORT) as channel:
                 stub = garden_pb2_grpc.GardenStub(channel)
                 response = stub.GetData (
-                    garden_pb2.Request(
+                    garden_pb2.PlantRequest(
                         request_timestamp_ms = timestamp,
                         plant_id = self.plant_id),
                     timeout = GRPC_CALL_TIMEOUT )
@@ -170,12 +170,12 @@ class MainWindow(QtWidgets.QWidget):
     @QtCore.Slot(object)
     def on_data_received(self, response):
         if (response != None):
-            self.sensor_timestamp_s.append[response.sensor_timestamp_s]
-            self.temp_degC.append[response.temp_degC]
-            self.scatter.setData(sensor_timestamp_s, temp_degC)
+            self.sensor_timestamp_s.append(response.sensor_timestamp_s)
+            self.temp_degC.append(response.temp_degC)
+            self.scatter.setData(self.sensor_timestamp_s, self.temp_degC)
 
     def onTestClick(self):
-        client_thread = WaterPlantThread()
+        client_thread = WaterPlantThread(0)
         self.threads.append(client_thread)
         client_thread.start()
         
