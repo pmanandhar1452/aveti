@@ -25,9 +25,9 @@ class AbstractRPiHardware(ABC):
         self.temp_rh_pins = []
         self.relay_pins = []
         plant_settings = config.getlist("Plants", "Plant1")
-        self.plant_names.append[plant_settings[1]]
-        self.temp_rh_pins.append[plant_settings[-2]]
-        self.relay_pins.append[plant_settings[-1]]
+        self.plant_names.append(plant_settings[1])
+        self.temp_rh_pins.append(plant_settings[-2])
+        self.relay_pins.append(plant_settings[-1])
 
     def get_plants(self):
         return self.plant_names
