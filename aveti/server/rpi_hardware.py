@@ -85,7 +85,7 @@ class RPiHardware(AbstractRPiHardware):
         self.temp_rh_threads = []
         self.water_relays = []
         for i in range(len(self.plant_names)):
-            print("Here")
+            print(f'{i} {self.plant_names[i]}')
             rh_thread = TempRHThread(self.temp_rh_pins[i])
             self.temp_rh_threads.append(rh_thread) 
             rh_thread.start()
