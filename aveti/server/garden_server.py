@@ -30,10 +30,9 @@ class Garden(garden_pb2_grpc.GardenServicer):
         timestamp_ms = int(time.time()*1000)
         rpi = HardwareFactory.getRPi()
         data = rpi.get_temp_rh(request.plant_id)
-        sensor_timestamp_s = time.time()
         return garden_pb2.PlantDataReply(
             request_timestamp_ms = request.request_timestamp_ms,
             timestamp_ms = timestamp_ms,
-            sensor_timestamp_s = sensor_timestamp_s,
+            sensor_timestamp_s = data["timestamp_s"],
             temp_degC = data["temp_degC"],
             rh_percent = data["rh_percent"])
