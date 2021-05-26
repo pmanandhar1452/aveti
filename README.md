@@ -10,3 +10,7 @@ The name is inspired by the Sanskrit word *अवेति*, which can mean amon
 1. Make sure the server is run using a user who has dialout previliges
 2. gpio libraries (We are using gpiozero: https://gpiozero.readthedocs.io/en/stable/)
     - https://gpiozero.readthedocs.io/en/stable/installing.html
+
+
+## Tutorial
+https://youtube.com/playlist?list=PLKX5VylxkYY0U5C7AJrQLeDRV8S2-I4qc
